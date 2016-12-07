@@ -1,0 +1,22 @@
+{
+  "name": "discord-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Parasin/discord-jokebot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Parasin/discord-jokebot/issues"
+  },
+  "homepage": "https://github.com/Parasin/discord-jokebot#readme",
+  "dependencies": {
+    "discordie": "^0.10.0"
+  }
+}
