@@ -35,7 +35,6 @@ module.exports = (client, Events, _) => {
                     let lines = string.split('\n');
 
                     resolve(lines[Math.floor(Math.random() * lines.length)]);
-                    fs.close();
                 }
             });
         });
