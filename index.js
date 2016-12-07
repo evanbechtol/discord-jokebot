@@ -1,8 +1,10 @@
 let Discordie = require('discordie');
+let _ = require('underscore');
+const config = require('./config/');
 const Events = Discordie.Events;
 const client = new Discordie();
-const config = require('./config/');
 
+require('./client/')(client, Events, _);
 
 try {
     client.connect({
@@ -12,12 +14,4 @@ try {
     console.log(JSON.stringify(e));
 }
 
-client.Dispatcher.on(Events.GATEWAY_READY, e => {
-    console.log('Connected as: ' + client.User.username);
-});
 
-client.Dispatcher.on(Events.MESSAGE_CREATE, e=> {
-    if (e.message.content === 'PING') {
-        e.message.channel.sendMessage('PONG');
-    }
-});

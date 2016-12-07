@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Parasin/discord-jokebot#readme",
   "dependencies": {
-    "discordie": "^0.10.0"
+    "discordie": "^0.10.0",
+    "underscore": "^1.8.3"
   }
 }
