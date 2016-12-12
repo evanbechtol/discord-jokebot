@@ -45,7 +45,7 @@ module.exports = (client, Events, _) => {
                         e.message.channel.sendMessage(message);
                     })
                     .then(() => {
-                        console.log('Message sent to \"' + name + '\" from \"' + e.message.author.username + '\" at: ' + now);
+                        console.log('[' + now + '] Sender: \"' + e.message.author.username + '\" Receiver: \"' + name + '\"');
                     });
             } else {
                 e.message.channel.sendMessage('You must mention a user using @<username>');
