@@ -10,7 +10,15 @@ module.exports = (client, Events, _) => {
             for (let i = 0; i < guilds.length; i++) {
                 guild_names.push(guilds[i].name);
             }
-            console.log('Connected to guilds: ' + JSON.stringify(guild_names));
+            let now = new Date();
+            let output = '[' + now + '] Connected to guilds: ' + JSON.stringify(guild_names);
+            writeToLog(output)
+                .then(() => {
+                    console.log(output);
+                })
+                .catch((e) => {
+                    console.log(JSON.stringify(e));
+                });
         } catch (e) {
             console.log(e);
         }
@@ -24,9 +32,17 @@ module.exports = (client, Events, _) => {
             guild: client.Guilds.get(e.guildId).name
         };
         let now = new Date();
-        console.log('[' + now + ']'
+        let output = '[' + now + ']'
             + data.username + ' has entered channel '
-            + data.channel + ' in guild ' + data.guild);
+            + data.channel + ' in guild ' + data.guild;
+
+        writeToLog(output)
+            .then(() => {
+                console.log(output);
+            })
+            .catch((e) => {
+                console.log(JSON.stringify(e));
+            });
     });
 
     client.Dispatcher.on(Events.MESSAGE_CREATE, (e) => {
@@ -68,7 +84,11 @@ module.exports = (client, Events, _) => {
                             e.message.channel.sendMessage(message);
                         })
                         .then(() => {
-                            console.log('[' + now + '] Sender: \"' + e.message.author.username + '\" Receiver: \"' + name + '\"');
+                            let output = '[' + now + '] Sender: \"' + e.message.author.username + '\" Receiver: \"' + name + '\"';
+                            writeToLog(output)
+                                .then(() => {
+                                    console.log(output);
+                                });
                         });
                 } else {
                     throw(mentionError);
@@ -79,5 +99,18 @@ module.exports = (client, Events, _) => {
         } catch (mentionError) {
             e.message.channel.sendMessage('You must mention a user using @<username>');
         }
+    }
+
+    function writeToLog(data) {
+        return new Promise((resolve, reject) => {
+            let path = __dirname + '/log.txt';
+            fs.appendFile(path, data + '\r\n', {flags: 'a+'}, (err, data) => {
+                if (err) {
+                    return reject(err);
+                } else {
+                    return resolve(data);
+                }
+            });
+        });
     }
 };
