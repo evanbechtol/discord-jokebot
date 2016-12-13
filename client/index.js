@@ -18,7 +18,15 @@ module.exports = (client, Events, _) => {
     });
 
     client.Dispatcher.on(Events.VOICE_CHANNEL_JOIN, (e) => {
-        console.log(JSON.stringify(e, null, 4));
+        data = {
+            username: e.user.username,
+            channel: e.channel.name,
+            guild: client.Guilds.get(e.guildId).name
+        };
+        let now = new Date();
+        console.log('[' + now + ']'
+            + data.username + ' has entered channel '
+            + data.channel + ' in guild ' + data.guild);
     });
 
     client.Dispatcher.on(Events.MESSAGE_CREATE, (e) => {
