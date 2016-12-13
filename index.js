@@ -2,7 +2,7 @@ let Discordie = require('discordie');
 let _ = require('underscore');
 const config = require('./config/');
 const Events = Discordie.Events;
-const client = new Discordie();
+const client = new Discordie({autoReconnect: true});
 
 require('./client/')(client, Events, _);
 
@@ -13,5 +13,3 @@ try {
 } catch (e) {
     console.log(JSON.stringify(e));
 }
-
-

@@ -4,6 +4,21 @@ const Promise = require('es6-promise').Promise;
 module.exports = (client, Events, _) => {
     client.Dispatcher.on(Events.GATEWAY_READY, () => {
         console.log('Connected as: ' + client.User.username);
+        try {
+            let guilds = client.Guilds.toArray();
+            let guild_names = [];
+            for (let i = 0; i < guilds.length; i++) {
+                guild_names.push(guilds[i].name);
+            }
+            console.log('Connected to guilds: ' + JSON.stringify(guild_names));
+        } catch (e) {
+            console.log(e);
+        }
+
+    });
+
+    client.Dispatcher.on(Events.VOICE_CHANNEL_JOIN, (e) => {
+        console.log(JSON.stringify(e, null, 4));
     });
 
     client.Dispatcher.on(Events.MESSAGE_CREATE, (e) => {
@@ -49,7 +64,6 @@ module.exports = (client, Events, _) => {
                         });
                 } else {
                     throw(mentionError);
-
                 }
             } else if (e.message.content === '!joke' && e.message.mentions.length === 0) {
                 throw(mentionError);
