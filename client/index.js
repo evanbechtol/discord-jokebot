@@ -43,10 +43,10 @@ module.exports = (client, Events, _) => {
             channel: e.channel.name,
             guild: client.Guilds.get(e.guildId).name
         };
-        let now = new Date();
-        let output = '[' + now + ']'
-            + data.username + ' has entered channel '
-            + data.channel + ' in guild ' + data.guild;
+        let now = new Date(),
+            output = '[' + now + ']'
+                + data.username + ' has entered channel '
+                + data.channel + ' in guild ' + data.guild;
 
         writeToLog(output)
             .then(() => {
@@ -72,17 +72,17 @@ module.exports = (client, Events, _) => {
      Helper method to retrieve random lines from the joke file
      */
     function getRandomLine() {
-        let filename = 'jokes.txt';
-        let path = __dirname + '/data/';
-        let filepath = path + filename;
+        let filename = 'jokes.txt',
+            path = __dirname + '/data/',
+            filepath = path + filename;
 
         return new Promise((resolve, reject) => {
             fs.readFile(filepath, (err, data) => {
                 if (err) {
                     reject(err);
                 } else {
-                    let string = data.toString();
-                    let lines = string.split('\n');
+                    let string = data.toString(),
+                        lines = string.split('\n');
 
                     resolve(lines[Math.floor(Math.random() * lines.length)]);
                 }
