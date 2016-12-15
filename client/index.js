@@ -30,7 +30,6 @@ module.exports = (client, Events, _) => {
         } catch (e) {
             console.log(e);
         }
-
     });
 
     /*
