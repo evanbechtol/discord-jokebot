@@ -42,9 +42,11 @@ module.exports = {
 
         // Special message for when Jeff joins the general channel
         if (data.username === 'Jeff' && data.channel === 'Booties for Breakfast') {
+            console.log('here');
             file_ops.getRandomLine()
                 .then((joke) => {
                     let message = data.username + joke;
+                    console.log('again');
                     channel.sendMessage('Welcome back ' + message);
                 })
                 .catch((e) => {

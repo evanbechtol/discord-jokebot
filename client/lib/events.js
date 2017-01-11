@@ -27,4 +27,13 @@ module.exports = (Client, Events) => {
     Client.Dispatcher.on(Events.MESSAGE_CREATE, (e) => {
         CommandMethods.generateJoke(e);
     });
+
+    /*
+     TODO: Setup event for when user starts typing; will sometimes respond with something funny
+     Client.Dispatcher.on(Events.TYPING_START, (e) => {
+     // Use modulo operator to determine if we are going to send msg.
+     // Need to create a separate txt file to contain lines to use when user typing.
+     // Keep the actual operations located in their respective files; com-methods & file-ops
+     });
+     */
 };
