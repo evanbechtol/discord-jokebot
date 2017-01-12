@@ -19,26 +19,21 @@ module.exports = (Client, Events) => {
     });
 
     /*
-     Watches for the '!joke' command in all channels, in the guilds
+     Watches for the '!jokebot' command in all guild text channels, in the guilds
      that the bot is connected to. Once the command is received, the
-     bot retrieves a random joke line from the file, and returns it to
-     the user that has been mentioned in the message.
+     bot parses the command, and returns the appropriate message for the command
+     given (if any).
      */
     Client.Dispatcher.on(Events.MESSAGE_CREATE, (e) => {
-        /*
-         Todo: Implement command parser to handle more than joke command
-         */
-        CommandMethods.generateJoke(e);
+        CommandMethods.parseCommands(Client, e);
     });
 
     /*
      When users being typing, event is called. A random number is then generated,
-     if it is less 0.08, then a message is sent to the guild channel that the user
+     if it is less 0.002, then a message is sent to the guild channel that the user
      is typing in.
      */
     Client.Dispatcher.on(Events.TYPING_START, (e) => {
         CommandMethods.typingStarted(Client, e);
     });
-
-
 };

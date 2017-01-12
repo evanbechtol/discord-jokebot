@@ -1,0 +1,29 @@
+```Markdown
+JokeBot Help
+
+Usage
+=====
+To use the jokebot, begin all commands with "!jokebot", followed by the command and an *(optional)* mention!
+Commands entered are not case-sensitive. Even the "!jokebot" command is not case-sensitive!
+
+*Example:* !jokebot <command> <optional mention>
+
+Commands
+========
+* help
+    * Mention Required: NO
+    * Returns this help message.
+* joke
+    * Mention Required: YES
+    * Returns a joke, directed at the user mentioned. Only users that are members of the Discord Guild can be mentioned.
+
+Examples
+========
+* !jokebot joke @Obama  //Returns a joke directed at the "Obama" user.
+* !jokebot              //Returns the help message
+
+
+More Help
+=========
+If you have questions/concerns/ideas for features, message evanbechtol@gmail.com, or DM me on Discord @Evan#7006
+```

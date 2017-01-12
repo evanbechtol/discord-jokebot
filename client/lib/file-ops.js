@@ -31,6 +31,7 @@ module.exports = {
             });
         });
     },
+
     writeToLog: (data) => {
         return new Promise((resolve, reject) => {
             let path = __dirname + '/log.txt';
@@ -39,6 +40,23 @@ module.exports = {
                     return reject(err);
                 } else {
                     return resolve(data);
+                }
+            });
+        });
+    },
+
+    readHelpFile: () => {
+        let path = __dirname + '/../data/',
+            filePath = path + 'help.txt';
+
+        return new Promise((resolve, reject) => {
+            fs.readFile(filePath, (err, data) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    let string = data.toString();
+
+                    resolve(string);
                 }
             });
         });
