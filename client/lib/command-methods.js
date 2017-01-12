@@ -115,24 +115,26 @@ module.exports = {
             },
             now = new Date(),
             message = '';
-        file_ops.getRandomLine('rebuttal')
-            .then((joke) => {
-                message = data.author.mention + joke;
-                data.channel.sendMessage(message);
-            })
-            .then(() => {
-                let output = '[' + now + '] Sender: \"' + data.author.username + '\" Receiver: \"' + data.user.username + '\"';
-                return file_ops.writeToLog(output);
-            })
-            .then((result) => {
-                console.log(result);
-            })
-            .catch((e) => {
-                file_ops.writeToLog(e)
-                    .then((result) => {
-                        console.log('Error writing to file: ' + result);
-                    });
-            });
+        if (data.author.username !== 'JokeBot') {
+            file_ops.getRandomLine('rebuttal')
+                .then((joke) => {
+                    message = data.author.mention + joke;
+                    data.channel.sendMessage(message);
+                })
+                .then(() => {
+                    let output = '[' + now + '] Sender: \"' + data.author.username + '\" Receiver: \"' + data.user.username + '\"';
+                    return file_ops.writeToLog(output);
+                })
+                .then((result) => {
+                    console.log(result);
+                })
+                .catch((e) => {
+                    file_ops.writeToLog(e)
+                        .then((result) => {
+                            console.log('Error writing to file: ' + result);
+                        });
+                });
+        }
     },
 
     parseCommands: function (Client, e) {
@@ -140,10 +142,23 @@ module.exports = {
             first = _.first(message).toLowerCase(),
             len = message.length;
 
+        if (_.each(e.message.mentions, (item) => {
+                if (item.username === 'JokeBot') {
+                    this.generateRebuttal(e);
+                }
+            }))
+
         if (first === '!jokebot' || first === '!joke') {
 
             if (len === 1 || (len > 1 && message[1].toLowerCase() === 'help')) {
                 this.generateHelp(e);
+
+            } else if (len > 1 && message[1].toLowerCase() === 'joke' &&
+                _.each(e.message.mentions, (item) => {
+                    if (item.username === 'JokeBot') {
+                        return true;
+                    }
+                })) {
 
             } else if (len > 1 && message[1].toLowerCase() === 'joke') {
                 this.generateJoke(e);
@@ -152,11 +167,7 @@ module.exports = {
                 this.generateHelp(e);
             }
 
-        } else if (_.each(e.message.mentions, (item) => {
-                if (item.username === 'JokeBot') {
-                    this.generateRebuttal(e);
-                }
-            })) {
+        } else  {
 
         }
     },
