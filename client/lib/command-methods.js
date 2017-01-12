@@ -27,39 +27,10 @@ module.exports = {
         }
     },
 
-    voiceChannelJoin: (Client, e) => {
-        let data = {
-                username: e.user.username,
-                guild: Client.Guilds.get(e.guildId).name,
-                channel: e.channel.name
-            },
-            now = new Date(),
-            output = '[' + now + ']'
-                + data.username + ' has entered channel '
-                + data.channel + ' in guild ' + data.guild,
-            guild = Client.Guilds.find(g => g.name === data.guild),
-            channel = guild.generalChannel;
-
-        // Special message for when Jeff joins the general channel
-        if (data.username === 'Jeff' && data.channel === 'Booties for Breakfast') {
-
-            file_ops.getRandomLine('joke')
-                .then((joke) => {
-                    let message = data.username + joke;
-
-                    channel.sendMessage('Welcome back ' + message);
-                })
-                .catch((e) => {
-
-                });
-        }
-
-        file_ops.writeToLog(output)
-            .then(() => {
-                console.log(output);
-            })
-            .catch((e) => {
-                console.log(JSON.stringify(e));
+    generateHelp: (e) => {
+        file_ops.readHelpFile()
+            .then((message) => {
+                e.message.channel.sendMessage(message);
             });
     },
 
@@ -72,24 +43,28 @@ module.exports = {
                 },
                 now = new Date(),
                 message = "";
-            file_ops.getRandomLine('joke')
-                .then((joke) => {
-                    message = data.user.mention + joke;
-                    data.channel.sendMessage(message);
-                })
-                .then(() => {
-                    let output = '[' + now + '] Sender: \"' + data.author.username + '\" Receiver: \"' + data.user.username + '\"';
-                    return file_ops.writeToLog(output);
-                })
-                .then((result) => {
-                    console.log(result);
-                })
-                .catch((e) => {
-                    file_ops.writeToLog(e)
-                        .then((result) => {
-                            console.log('Error writing to file: ' + result);
-                        });
-                });
+
+            if (data.user.username.toLowerCase() !== 'jokebot') {
+
+                file_ops.getRandomLine('joke')
+                    .then((joke) => {
+                        message = data.user.mention + joke;
+                        data.channel.sendMessage(message);
+                    })
+                    .then(() => {
+                        let output = '[' + now + '] Sender: \"' + data.author.username + '\" Receiver: \"' + data.user.username + '\"';
+                        return file_ops.writeToLog(output);
+                    })
+                    .then((result) => {
+                        console.log(result);
+                    })
+                    .catch((e) => {
+                        file_ops.writeToLog(e)
+                            .then((result) => {
+                                console.log('Joke error: ' + result);
+                            });
+                    });
+            }
 
         } else {
             file_ops.readHelpFile()
@@ -100,38 +75,24 @@ module.exports = {
         }
     },
 
-    generateHelp: (e) => {
-        file_ops.readHelpFile()
-            .then((message) => {
-                e.message.channel.sendMessage(message);
-            });
-    },
-
     generateRebuttal: (e) => {
         let data = {
                 user: e.message.mentions[0],
                 channel: e.message.channel,
                 author: e.message.author
             },
-            now = new Date(),
             message = '';
-        if (data.author.username !== 'JokeBot') {
+
+        if (data.author.username.toLowerCase() !== 'jokebot') {
             file_ops.getRandomLine('rebuttal')
                 .then((joke) => {
                     message = data.author.mention + joke;
                     data.channel.sendMessage(message);
                 })
-                .then(() => {
-                    let output = '[' + now + '] Sender: \"' + data.author.username + '\" Receiver: \"' + data.user.username + '\"';
-                    return file_ops.writeToLog(output);
-                })
-                .then((result) => {
-                    console.log(result);
-                })
                 .catch((e) => {
                     file_ops.writeToLog(e)
                         .then((result) => {
-                            console.log('Error writing to file: ' + result);
+                            console.log('Rebuttal error: ' + result);
                         });
                 });
         }
@@ -148,28 +109,21 @@ module.exports = {
                 }
             }))
 
-        if (first === '!jokebot' || first === '!joke') {
+            if (first === '!jokebot' || first === '!joke') {
 
-            if (len === 1 || (len > 1 && message[1].toLowerCase() === 'help')) {
-                this.generateHelp(e);
+                if (len === 1 || (len > 1 && message[1].toLowerCase() === 'help')) {
+                    this.generateHelp(e);
 
-            } else if (len > 1 && message[1].toLowerCase() === 'joke' &&
-                _.each(e.message.mentions, (item) => {
-                    if (item.username === 'JokeBot') {
-                        return true;
-                    }
-                })) {
+                } else if (len > 1 && message[1].toLowerCase() === 'joke') {
+                    this.generateJoke(e);
 
-            } else if (len > 1 && message[1].toLowerCase() === 'joke') {
-                this.generateJoke(e);
+                } else {
+                    this.generateHelp(e);
+                }
 
             } else {
-                this.generateHelp(e);
+
             }
-
-        } else  {
-
-        }
     },
 
     typingStarted: (Client, e) => {
@@ -198,8 +152,32 @@ module.exports = {
                 .catch((e) => {
                     file_ops.writeToLog(e)
                         .then((result) => {
-                            console.log('Error writing to file: ' + result);
+                            console.log('Typing error: ' + result);
                         });
+                });
+        }
+    },
+
+    voiceChannelJoin: (Client, e) => {
+        let data = {
+                username: e.user.username,
+                guild: Client.Guilds.get(e.guildId).name,
+                channel: e.channel.name
+            },
+            guild = Client.Guilds.find(g => g.name === data.guild),
+            channel = guild.generalChannel;
+
+        // Special message for when Jeff joins the general channel
+        if (data.username === 'Jeff' && data.channel === 'Booties for Breakfast') {
+
+            file_ops.getRandomLine('joke')
+                .then((joke) => {
+                    let message = data.username + joke;
+
+                    channel.sendMessage('Welcome back ' + message);
+                })
+                .catch((e) => {
+
                 });
         }
     }

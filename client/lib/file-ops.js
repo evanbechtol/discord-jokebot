@@ -34,7 +34,7 @@ module.exports = {
 
     writeToLog: (data) => {
         return new Promise((resolve, reject) => {
-            let path = __dirname + '/log.txt';
+            let path = __dirname + '/../log/' + 'log.txt';
             fs.appendFile(path, data + '\r\n', (err) => {
                 if (err) {
                     return reject(err);
