@@ -70,16 +70,20 @@ module.exports = {
 
             if (e.message.mentions && e.message.mentions.length > 0) {
 
-                let name = e.message.mentions[0].username,
+                let data = {
+                        user: e.message.mentions[0],
+                        channel: e.message.channel,
+                        author: e.message.author
+                    },
                     now = new Date(),
                     message = "";
                 file_ops.getRandomLine('joke')
                     .then((joke) => {
-                        message = name + joke;
-                        e.message.channel.sendMessage(message);
+                        message = data.user.mention + joke;
+                        data.channel.sendMessage(message);
                     })
                     .then(() => {
-                        let output = '[' + now + '] Sender: \"' + e.message.author.username + '\" Receiver: \"' + name + '\"';
+                        let output = '[' + now + '] Sender: \"' + data.author.username + '\" Receiver: \"' + data.user.username + '\"';
                         return file_ops.writeToLog(output);
                     })
                     .then((result) => {
@@ -103,11 +107,11 @@ module.exports = {
                 username: e.user.username,
                 mention: e.user.mention,
                 guild: Client.Guilds.get(e.channel.guild_id).name,
-                channel: e.channel.name
+                channel: e.channel
             },
             random = Math.random(),
 
-            // Special get special probabilities
+            // Special users get special probabilities
             specialUsers = ['Ferne', 'Jeff', 'Fluffy', 'Evan'];
 
         if (_.contains(specialUsers, data.username)) {
@@ -119,7 +123,7 @@ module.exports = {
             file_ops.getRandomLine('typing')
                 .then((joke) => {
                     let message = data.mention + ', stop typing; ' + joke;
-                    e.channel.sendMessage(message);
+                    data.channel.sendMessage(message);
                 })
                 .catch((e) => {
                     file_ops.writeToLog(e)

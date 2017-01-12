@@ -7,8 +7,8 @@ module.exports = {
 
         if (file === 'joke') {
             filename = 'jokes.txt';
-        } else if (file === 'rebuttle') {
-            filename = 'rebuttle.txt';
+        } else if (file === 'rebuttal') {
+            filename = 'rebuttal.txt';
         } else if (file === 'typing') {
             filename = 'typingLines.txt';
         } else {
