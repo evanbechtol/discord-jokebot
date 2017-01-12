@@ -25,6 +25,9 @@ module.exports = (Client, Events) => {
      the user that has been mentioned in the message.
      */
     Client.Dispatcher.on(Events.MESSAGE_CREATE, (e) => {
+        /*
+         Todo: Implement command parser to handle more than joke command
+         */
         CommandMethods.generateJoke(e);
     });
 
