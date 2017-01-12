@@ -115,7 +115,7 @@ module.exports = {
             specialUsers = ['Ferne', 'Jeff', 'Fluffy', 'Evan'];
 
         if (_.contains(specialUsers, data.username)) {
-            random -= 0.3;
+            random -= 0.1;
         }
 
         if (random < 0.08) {
