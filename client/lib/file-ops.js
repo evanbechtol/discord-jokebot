@@ -2,9 +2,20 @@ let fs = require('fs'),
     Promise = require('es6-promise').Promise;
 
 module.exports = {
-    getRandomLine: () => {
-        let filename = 'jokes.txt',
-            path = __dirname + '/../data/',
+    getRandomLine: (file) => {
+        let filename = '';
+
+        if (file === 'joke') {
+            filename = 'jokes.txt';
+        } else if (file === 'rebuttle') {
+            filename = 'rebuttle.txt';
+        } else if (file === 'typing') {
+            filename = 'typingLines.txt';
+        } else {
+            // nothing
+        }
+
+        let path = __dirname + '/../data/',
             filePath = path + filename;
 
         return new Promise((resolve, reject) => {

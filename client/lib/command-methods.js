@@ -42,11 +42,11 @@ module.exports = {
 
         // Special message for when Jeff joins the general channel
         if (data.username === 'Jeff' && data.channel === 'Booties for Breakfast') {
-            console.log('here');
-            file_ops.getRandomLine()
+
+            file_ops.getRandomLine('joke')
                 .then((joke) => {
                     let message = data.username + joke;
-                    console.log('again');
+
                     channel.sendMessage('Welcome back ' + message);
                 })
                 .catch((e) => {
@@ -65,12 +65,15 @@ module.exports = {
 
     generateJoke: (e) => {
         let data = e.message.content.split(' ');
+
         if (_.first(data).toLowerCase() === '!joke') {
+
             if (e.message.mentions && e.message.mentions.length > 0) {
+
                 let name = e.message.mentions[0].username,
                     now = new Date(),
                     message = "";
-                file_ops.getRandomLine()
+                file_ops.getRandomLine('joke')
                     .then((joke) => {
                         message = name + joke;
                         e.message.channel.sendMessage(message);
@@ -88,9 +91,42 @@ module.exports = {
                                 console.log('Error writing to file: ' + result);
                             });
                     });
+
             } else {
                 e.message.channel.sendMessage('You must mention a user using @<username>');
             }
+        }
+    },
+
+    typingStarted: (Client, e) => {
+        let data = {
+                username: e.user.username,
+                mention: e.user.mention,
+                guild: Client.Guilds.get(e.channel.guild_id).name,
+                channel: e.channel.name
+            },
+            random = Math.random(),
+
+            // Special get special probabilities
+            specialUsers = ['Ferne', 'Jeff', 'Fluffy', 'Evan'];
+
+        if (_.contains(specialUsers, data.username)) {
+            random -= 0.3;
+        }
+
+        if (random < 0.08) {
+
+            file_ops.getRandomLine('typing')
+                .then((joke) => {
+                    let message = data.mention + ', stop typing; ' + joke;
+                    e.channel.sendMessage(message);
+                })
+                .catch((e) => {
+                    file_ops.writeToLog(e)
+                        .then((result) => {
+                            console.log('Error writing to file: ' + result);
+                        });
+                });
         }
     }
 };
