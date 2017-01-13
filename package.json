@@ -19,6 +19,7 @@
   "dependencies": {
     "discordie": "^0.10.0",
     "es6-promise": "^4.0.5",
+    "mongoose": "^4.7.6",
     "underscore": "^1.8.3"
   }
 }
