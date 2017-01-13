@@ -44,42 +44,24 @@ module.exports = {
                 now = new Date(),
                 message = "";
 
-            if (data.user.username.toLowerCase() !== 'jokebot') {
-
-                file_ops.getRandomLine('joke')
-                    .then((joke) => {
-
-                        if (data.user.username !== 'Evan') {
-                            message = data.user.mention + joke;
-                            data.channel.sendMessage(message);
-                        } else {
-                            message = 'I would never insult my creator, ' + data.author.mention;
-                            e.message.channel.sendMessage(message);
-                        }
-                    })
-                    .then(() => {
-
-
-                        let output = '[' + now + '] Sender: \"' + data.author.username + '\" Receiver: \"' + data.user.username + '\"';
-                        return file_ops.writeToLog(output);
-                    })
-                    .then((result) => {
-                        console.log(result);
-                    })
-                    .catch((e) => {
-                        file_ops.writeToLog(e)
-                            .then((result) => {
-                                console.log('Joke error: ' + result);
-                            });
-                    });
-            }
-
-        } else {
-            file_ops.readHelpFile()
-                .then((message) => {
-                    e.message.channel.sendMessage(message);
+            file_ops.getRandomLine('joke')
+                .then((joke) => {
+                    message = data.user.mention + joke;
+                    data.channel.sendMessage(message);
+                })
+                .then(() => {
+                    let output = '[' + now + '] Sender: \"' + data.author.username + '\" Receiver: \"' + data.user.username + '\"';
+                    return file_ops.writeToLog(output);
+                })
+                .then((result) => {
+                    console.log(result);
+                })
+                .catch((e) => {
+                    file_ops.writeToLog(e)
+                        .then((result) => {
+                            console.log('Joke error: ' + result);
+                        });
                 });
-
         }
     },
 
@@ -91,48 +73,49 @@ module.exports = {
             },
             message = '';
 
-        if (data.author.username.toLowerCase() !== 'jokebot') {
-            file_ops.getRandomLine('rebuttal')
-                .then((joke) => {
-                    message = data.author.mention + joke;
-                    data.channel.sendMessage(message);
-                })
-                .catch((e) => {
-                    file_ops.writeToLog(e)
-                        .then((result) => {
-                            console.log('Rebuttal error: ' + result);
-                        });
-                });
-        }
+        file_ops.getRandomLine('rebuttal')
+            .then((joke) => {
+                message = data.author.mention + joke;
+                data.channel.sendMessage(message);
+            })
+            .catch((e) => {
+                file_ops.writeToLog(e)
+                    .then((result) => {
+                        console.log('Rebuttal error: ' + result);
+                    });
+            });
     },
 
     parseCommands: function (Client, e) {
         let message = e.message.content.split(' '),
             first = _.first(message).toLowerCase(),
-            len = message.length;
+            len = message.length,
+            author = e.message.author.username;
 
-        if (_.each(e.message.mentions, (item) => {
-                if (item.username === 'JokeBot') {
-                    this.generateRebuttal(e);
-                    return true;
+        if (author.toLowerCase() !== 'jokebot') {
+
+            if (_.each(e.message.mentions, (item) => {
+                    if (item.username === 'JokeBot') {
+                        this.generateRebuttal(e);
+                    }
+                }))
+
+                if (first === '!jokebot' && len > 1) {
+
+                    switch (message[1].toLowerCase()) {
+                        case 'help':
+                            this.generateHelp(e);
+                            break;
+
+                        case 'joke':
+                            this.generateJoke(e);
+                            break;
+
+                        default:
+                            break;
+                    }
                 }
-            }))
-
-            if (first === '!jokebot' || first === '!joke' && len > 1) {
-
-                if (message[1].toLowerCase() === 'help') {
-                    this.generateHelp(e);
-                    return true;
-
-                } else if (message[1].toLowerCase() === 'joke') {
-                    this.generateJoke(e);
-                    return true;
-
-                }
-
-            } else {
-
-            }
+        }
     },
 
     typingStarted: (Client, e) => {
@@ -176,18 +159,18 @@ module.exports = {
             guild = Client.Guilds.find(g => g.name === data.guild),
             channel = guild.generalChannel;
 
-        // Special message for when Jeff joins the general channel
-        if (data.username === 'Jeff' && data.channel === 'Booties for Breakfast') {
+        // Special message for when user joins the general channel
+        /*if (data.username === 'Jeff' && data.channel === 'Booties for Breakfast') {
 
-            file_ops.getRandomLine('joke')
-                .then((joke) => {
-                    let message = data.username + joke;
+         file_ops.getRandomLine('joke')
+         .then((joke) => {
+         let message = data.user.mention + joke;
 
-                    channel.sendMessage('Welcome back ' + message);
-                })
-                .catch((e) => {
+         channel.sendMessage('Welcome back ' + message);
+         })
+         .catch((e) => {
 
-                });
-        }
+         });
+         }*/
     }
 };
