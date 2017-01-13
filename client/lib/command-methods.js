@@ -48,10 +48,18 @@ module.exports = {
 
                 file_ops.getRandomLine('joke')
                     .then((joke) => {
-                        message = data.user.mention + joke;
-                        data.channel.sendMessage(message);
+
+                        if (data.user.username !== 'Evan') {
+                            message = data.user.mention + joke;
+                            data.channel.sendMessage(message);
+                        } else {
+                            message = 'I would never insult my creator, ' + data.author.mention;
+                            e.message.channel.sendMessage(message);
+                        }
                     })
                     .then(() => {
+
+
                         let output = '[' + now + '] Sender: \"' + data.author.username + '\" Receiver: \"' + data.user.username + '\"';
                         return file_ops.writeToLog(output);
                     })
@@ -106,19 +114,20 @@ module.exports = {
         if (_.each(e.message.mentions, (item) => {
                 if (item.username === 'JokeBot') {
                     this.generateRebuttal(e);
+                    return true;
                 }
             }))
 
-            if (first === '!jokebot' || first === '!joke') {
+            if (first === '!jokebot' || first === '!joke' && len > 1) {
 
-                if (len === 1 || (len > 1 && message[1].toLowerCase() === 'help')) {
+                if (message[1].toLowerCase() === 'help') {
                     this.generateHelp(e);
+                    return true;
 
-                } else if (len > 1 && message[1].toLowerCase() === 'joke') {
+                } else if (message[1].toLowerCase() === 'joke') {
                     this.generateJoke(e);
+                    return true;
 
-                } else {
-                    this.generateHelp(e);
                 }
 
             } else {

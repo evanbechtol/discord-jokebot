@@ -12,7 +12,6 @@ module.exports = {
         } else if (file === 'typing') {
             filename = 'typingLines.txt';
         } else {
-            // nothing
         }
 
         let path = __dirname + '/../data/',
