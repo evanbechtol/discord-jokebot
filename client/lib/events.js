@@ -10,6 +10,17 @@ module.exports = (Client, Events) => {
         CommandMethods.gatewayReady(Client);
     });
 
+
+    Client.Dispatcher.on(Events.GUILD_MEMBER_ADD, (e) => {
+        CommandMethods.guildMemberAdd(Client, e);
+    });
+
+
+    Client.Dispatcher.on(Events.GUILD_CREATE, (e) => {
+        CommandMethods.guildCreate(Client, e);
+    });
+
+
     /*
      Keeps track of users entering any voice channel, on the guilds
      that the bot is connected to

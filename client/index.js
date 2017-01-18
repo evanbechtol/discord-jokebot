@@ -3,7 +3,8 @@ let Discordie = require('discordie'),
 
 const
     config = require('../config/'),
-    Client = new Discordie({autoReconnect: true});
+    Client = new Discordie({autoReconnect: true}),
+    db = require(__dirname + '/../db/');
 
 /*
  Client index.js should only be responsible for connecting and maintaining connection
@@ -15,8 +16,9 @@ try {
     Client.connect({
         token: config.token
     });
+    db.connect();
 } catch (e) {
-    console.log(JSON.stringify(e));
+    console.error('Error:', e);
 }
 
 require('./lib/events')(Client, Events);
