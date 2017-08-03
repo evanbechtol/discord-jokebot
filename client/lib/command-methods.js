@@ -94,10 +94,10 @@ module.exports = {
 		
 		if ( author.toLowerCase() !== 'jokebot' ) {
 			
-			if (!e.message.mentions && e.message.content.indexOf( 'joke' ) > -1 ) {
+			/*if (!e.message.mentions && e.message.content.indexOf( 'joke' ) > -1 ) {
 				let sendingMsg = 'Did somebody say joke?! I love jokes :smiley: ';
 				e.message.channel.sendMessage( sendingMsg );
-			}
+			}*/
 			
 			if ( _.each( e.message.mentions, ( item ) => {
 						if ( item.username === 'JokeBot' ) {
