@@ -1,5 +1,29 @@
+const express   = require( 'express' );
+let 	app       = express(),
+			Discordie = require( 'discordie' ),
+			Events    = Discordie.Events;
+
+const
+		config = require( './config/' ),
+		Client = new Discordie( { autoReconnect : true } );
+
 /*
- Entry point for the program. Only responsibility is to
- bring in the client and any global modules
+ Client index.js should only be responsible for connecting and maintaining connection
+
+ Attempt to connect to the discord guilds that the bot
+ is assigned to, or able to join.
  */
-require('./client/');
+try {
+	app.listen( config.port, () => {
+		console.log( 'Express server listening on port ', config.port );
+		Client.connect( {
+			token : config.token
+		} );
+	} );
+	
+} catch ( e ) {
+	console.log( JSON.stringify( e ) );
+}
+
+require( './client/lib/events' )( Client, Events );
+
