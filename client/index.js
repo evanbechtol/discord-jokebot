@@ -15,6 +15,7 @@ const
  */
 try {
 	app.listen( config.port, () => {
+		console.log( 'Express server listening on port ', config.port );
 		Client.connect( {
 			token : config.token
 		} );
