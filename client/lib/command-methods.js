@@ -97,7 +97,10 @@ module.exports = {
 				author  = e.message.author.username;
 		
 		if ( author.toLowerCase() !== 'jokebot' ) {
-			if ( !e.message.mentions.length && e.message.content.indexOf( 'joke' ) > -1 ) {
+			let index = e.message.content.indexOf( 'joke' ),
+				  stringMatch = index > -1 && (  e.message.content[index + 4] !== 'b' && e.message.content[index + 4] !== 'B' );
+			
+			if ( !e.message.mentions.length && stringMatch) {
 				e.sendingMsg = 'Did somebody say joke?! I love jokes! :smiley: Here is one for you... ';
 				this.generateJoke( e );
 			}
