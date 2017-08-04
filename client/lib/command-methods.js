@@ -35,34 +35,38 @@ module.exports = {
 	},
 	
 	generateJoke : ( e ) => {
+		let now     = new Date(),
+				message = '',
+				data    = {
+					channel : e.message.channel,
+					author  : e.message.author
+				};
+		
 		if ( e.message.mentions && e.message.mentions.length > 0 ) {
-			let data    = {
-						user    : e.message.mentions[ 0 ],
-						channel : e.message.channel,
-						author  : e.message.author
-					},
-					now     = new Date(),
-					message = "";
-			
-			file_ops.getRandomLine( 'joke' )
-					.then( ( joke ) => {
-						message = data.user.mention + joke;
-						data.channel.sendMessage( message );
-					} )
-					.then( () => {
-						let output = '[' + now + '] Sender: \"' + data.author.username + '\" Receiver: \"' + data.user.username + '\"';
-						return file_ops.writeToLog( output );
-					} )
-					.then( ( result ) => {
-						console.log( result );
-					} )
-					.catch( ( e ) => {
-						file_ops.writeToLog( e )
-								.then( ( result ) => {
-									console.log( 'Joke error: ' + result );
-								} );
-					} );
+			data.user = e.message.mentions[ 0 ];
+		} else if ( e.sendingMsg ) {
+			data.user = e.message.author;
 		}
+		
+		file_ops.getRandomLine( 'joke' )
+				.then( ( joke ) => {
+					let prefix = e.sendingMsg ? e.sendingMsg : '';
+					message    = prefix + data.user.mention + joke;
+					data.channel.sendMessage( message );
+				} )
+				.then( () => {
+					let output = '[' + now + '] Sender: \"' + data.author.username + '\" Receiver: \"' + data.user.username + '\"';
+					return file_ops.writeToLog( output );
+				} )
+				.then( ( result ) => {
+					console.log( result );
+				} )
+				.catch( ( e ) => {
+					file_ops.writeToLog( e )
+							.then( ( result ) => {
+								console.log( 'Joke error: ' + result );
+							} );
+				} );
 	},
 	
 	generateRebuttal : ( e ) => {
@@ -93,11 +97,10 @@ module.exports = {
 				author  = e.message.author.username;
 		
 		if ( author.toLowerCase() !== 'jokebot' ) {
-			
-			/*if (!e.message.mentions && e.message.content.indexOf( 'joke' ) > -1 ) {
-				let sendingMsg = 'Did somebody say joke?! I love jokes :smiley: ';
-				e.message.channel.sendMessage( sendingMsg );
-			}*/
+			if ( !e.message.mentions.length && e.message.content.indexOf( 'joke' ) > -1 ) {
+				e.sendingMsg = 'Did somebody say joke?! I love jokes! :smiley: Here is one for you... ';
+				this.generateJoke( e );
+			}
 			
 			if ( _.each( e.message.mentions, ( item ) => {
 						if ( item.username === 'JokeBot' ) {
